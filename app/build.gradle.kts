@@ -56,6 +56,8 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    implementation("androidx.navigation:navigation-compose:2.8.3")
-    implementation("io.coil-kt:coil-compose:2.5.0")
+    implementation(libs.navigation.compose)
+    implementation(libs.coil.compose)
+    implementation(libs.gson)
+    implementation(libs.lifecycle.viewmodel.compose)
 }

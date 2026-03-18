@@ -11,9 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -24,41 +22,33 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.example.aplikacje_mobline.R
 import com.example.aplikacje_mobline.data.Trail
 import com.example.aplikacje_mobline.data.TrailType
+import com.example.aplikacje_mobline.navigation.Screen
 
-
-private val fakeTrails = listOf(
-    Trail(1, "Morskie Oko", "Łatwa", "8.5 km", "Klasyczna trasa asfaltowa do jednego z najpiękniejszych jezior.", TrailType.HIKING, "https://www.visitzakopane.pl/blog/wp-content/uploads/2017/03/morskieoko.jpg"),
-    Trail(2, "Giewont", "Średnia", "10 km", "Kultowy szczyt z krzyżem, wymagający kondycji.", TrailType.HIKING, "https://i-tatry.pl/wp-content/uploads/2014/10/giewont-1.jpg"),
-    Trail(3, "Rysy", "Trudna", "14 km", "Najwyższy szczyt Polski, tylko dla doświadczonych turystów.", TrailType.HIKING, "https://magazyngory.pl/wp-content/uploads/2024/03/cover_Wysoka-i-Rysy-z-Niznich-Rysow.jpg"),
-    Trail(4, "Trasa Dolina Kościeliska", "Łatwa", "12 km", "Piękna trasa rowerowa przez dolinę.", TrailType.BIKING, "https://contents.mediadecathlon.com/s1251952/k\$8da1f409bc521c23ee7c3921edc3a0f7/1920x0/1173pt660/2346xcr1320/dolina-koscieliska.png?format=auto"),
-    Trail(5, "Szlak Górski na Rowerze", "Średnia", "15 km", "Wymagająca trasa rowerowa dla zaawansowanych.", TrailType.BIKING, "https://globtroper.pl/wp-content/uploads/2020/06/zwiedzanie-polski-na-rowerach-szlak-rowerowy.jpeg"),
-    Trail(6, "Białka Tatrzańska - Bukowina", "Łatwa", "20 km", "Długa, ale łatwa trasa rowerowa.", TrailType.BIKING, "https://www.waszaturystyka.pl/attachment-img_3043/")
-)
 
 @Composable
-fun HomeScreen(navController: NavController, modifier: Modifier = Modifier) {
-    
-    var selectedTrailType by remember { mutableStateOf(TrailType.HIKING) }
-    
-    val filteredTrails = fakeTrails.filter { it.type == selectedTrailType }
+fun HomeScreen(
+    navController: NavController,
+    viewModel: HomeViewModel = viewModel(),
+    modifier: Modifier = Modifier
+) {
+
+    val selectedType by viewModel.selectedType.collectAsState()
+    val filteredTrails by viewModel.filteredTrails.collectAsState()
 
     Scaffold(
         bottomBar = { }
@@ -73,7 +63,7 @@ fun HomeScreen(navController: NavController, modifier: Modifier = Modifier) {
                 style = MaterialTheme.typography.headlineMedium,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
             )
-            
+
 
             Row(
                 modifier = Modifier
@@ -82,32 +72,32 @@ fun HomeScreen(navController: NavController, modifier: Modifier = Modifier) {
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Button(
-                    onClick = { selectedTrailType = TrailType.HIKING },
+                    onClick = { viewModel.selectType(TrailType.HIKING) },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = if (selectedTrailType == TrailType.HIKING) 
-                            MaterialTheme.colorScheme.primary 
-                        else 
+                        containerColor = if (selectedType == TrailType.HIKING)
+                            MaterialTheme.colorScheme.primary
+                        else
                             MaterialTheme.colorScheme.surfaceVariant
                     )
                 ) {
                     Text(stringResource(R.string.home_button_one))
                 }
-                
+
                 Button(
-                    onClick = { selectedTrailType = TrailType.BIKING },
+                    onClick = { viewModel.selectType(TrailType.BIKING) },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = if (selectedTrailType == TrailType.BIKING) 
-                            MaterialTheme.colorScheme.primary 
-                        else 
+                        containerColor = if (selectedType == TrailType.BIKING)
+                            MaterialTheme.colorScheme.primary
+                        else
                             MaterialTheme.colorScheme.surfaceVariant
                     )
                 ) {
                     Text(stringResource(R.string.home_button_two))
                 }
             }
-            
+
             Spacer(Modifier.height(8.dp))
 
             LazyColumn(
@@ -137,7 +127,7 @@ fun TrailCard(
             .fillMaxWidth()
             .padding(8.dp)
             .clickable {
-                navController.navigate("trailDetails/${trail.id}")
+                navController.navigate(Screen.TrailDetails.createRoute(trail.id))
             },
         elevation = CardDefaults.cardElevation(8.dp)
     ) {

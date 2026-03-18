@@ -1,0 +1,92 @@
+[
+  {
+    "id": 1,
+    "name": "Morskie Oko",
+    "difficulty": "Łatwa",
+    "distance": "8.5 km",
+    "description": "Klasyczna trasa asfaltowa do jednego z najpiękniejszych jezior.",
+    "type": "HIKING",
+    "imagePath": "https://www.visitzakopane.pl/blog/wp-content/uploads/2017/03/morskieoko.jpg"
+  },
+  {
+    "id": 2,
+    "name": "Giewont",
+    "difficulty": "Średnia",
+    "distance": "10 km",
+    "description": "Kultowy szczyt z krzyżem, wymagający kondycji.",
+    "type": "HIKING",
+    "imagePath": "https://i-tatry.pl/wp-content/uploads/2014/10/giewont-1.jpg"
+  },
+  {
+    "id": 3,
+    "name": "Rysy",
+    "difficulty": "Trudna",
+    "distance": "14 km",
+    "description": "Najwyższy szczyt Polski, tylko dla doświadczonych turystów.",
+    "type": "HIKING",
+    "imagePath": "https://magazyngory.pl/wp-content/uploads/2024/03/cover_Wysoka-i-Rysy-z-Niznich-Rysow.jpg"
+  },
+  {
+    "id": 4,
+    "name": "Trasa Dolina Kościeliska",
+    "difficulty": "Łatwa",
+    "distance": "12 km",
+    "description": "Piękna trasa rowerowa przez dolinę.",
+    "type": "BIKING",
+    "imagePath": "https://contents.mediadecathlon.com/s1251952/k$8da1f409bc521c23ee7c3921edc3a0f7/1920x0/1173pt660/2346xcr1320/dolina-koscieliska.png?format=auto"
+  },
+  {
+    "id": 5,
+    "name": "Szlak Górski na Rowerze",
+    "difficulty": "Średnia",
+    "distance": "15 km",
+    "description": "Wymagająca trasa rowerowa dla zaawansowanych.",
+    "type": "BIKING",
+    "imagePath": "https://globtroper.pl/wp-content/uploads/2020/06/zwiedzanie-polski-na-rowerach-szlak-rowerowy.jpeg"
+  },
+  {
+    "id": 6,
+    "name": "Białka Tatrzańska - Bukowina",
+    "difficulty": "Łatwa",
+    "distance": "20 km",
+    "description": "Długa, ale łatwa trasa rowerowa przez malownicze wioski podtatrzańskie.",
+    "type": "BIKING",
+    "imagePath": "https://www.waszaturystyka.pl/wp-content/uploads/2016/08/3e4b3d256a2531e5e21a869496b34598.jpg"
+  },
+  {
+    "id": 7,
+    "name": "Kasprowy Wierch",
+    "difficulty": "Trudna",
+    "distance": "12 km",
+    "description": "Jeden z najbardziej znanych szczytów Tatr, z doskonałą panoramą na polskie i słowackie szczyty. Trasa wymaga dobrej kondycji i odpowiedniego wyposażenia.",
+    "type": "HIKING",
+    "imagePath": "https://www.zakopane.pl/assets/zakopane25/media/thumbnails/main_slider/assets/zakopane25/media/files/ee252021-b72a-49f3-803b-273b87d8fc34/20160722-ab-dsc07384-copy.jpg"
+  },
+  {
+    "id": 8,
+    "name": "Czerwone Wierchy",
+    "difficulty": "Trudna",
+    "distance": "18 km",
+    "description": "Długi grzbietowy szlak po kopulastych wierzchołkach ponad Doliną Małej Łąki. Niesamowite widoki w każdą stronę, ale trasa przeznaczona tylko dla sprawnych turystów.",
+    "type": "HIKING",
+    "imagePath": "https://www.zakopane.pl/assets/zakopane25/media/thumbnails/main_slider/assets/zakopane25/media/files/94de0c36-7ce4-48e1-a1f7-04382b47f309/00607.jpg"
+  },
+  {
+    "id": 9,
+    "name": "Gubałówka - Szlak Widokowy",
+    "difficulty": "Łatwa",
+    "distance": "5 km",
+    "description": "Łatwa, rodzinna trasa spacerowa po grzbiecie Gubałówki z widokiem na panoramę Tatr. Idealna dla dzieci i osób starszych.",
+    "type": "HIKING",
+    "imagePath": "https://galeria.bankier.pl/p/d/8/95e8560a37b823-948-567-5-2-995-596.jpg"
+  },
+  {
+    "id": 10,
+    "name": "Zakopane - Nowy Targ",
+    "difficulty": "Łatwa",
+    "distance": "25 km",
+    "description": "Spokojna trasa rowerowa wzdłuż Podhala, biegnąca przez Poronin i Szaflary. Płaski, asfaltowy teren — idealna na niedzielną przejażdżkę.",
+    "type": "BIKING",
+    "imagePath": "https://cdn.blablacar.com/discover/bus/PL/zakopane-1.webp"
+  }
+]
