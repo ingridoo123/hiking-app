@@ -31,8 +31,7 @@ fun TrailDetailsScreen(
     }
 
     val trail by viewModel.trail.collectAsStateWithLifecycle()
-
-    if (trail == null) {
+    val safeTrail = trail ?: run {
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
@@ -50,8 +49,8 @@ fun TrailDetailsScreen(
     ) {
         Spacer(modifier = Modifier.height(40.dp))
         AsyncImage(
-            model = trail!!.imagePath,
-            contentDescription = trail!!.name,
+            model = safeTrail.imagePath,
+            contentDescription = safeTrail.name,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(220.dp),
@@ -59,24 +58,25 @@ fun TrailDetailsScreen(
         )
 
         Text(
-            text = trail!!.name,
+            text = safeTrail.name,
             style = MaterialTheme.typography.headlineMedium
         )
 
         Text(
-            text = "Trudność: ${trail!!.difficulty}",
+            text = "Trudność: ${safeTrail.difficulty}",
             style = MaterialTheme.typography.bodyLarge
         )
 
         Text(
-            text = "Dystans: ${trail!!.distance}",
+            text = "Dystans: ${safeTrail.distance}",
             style = MaterialTheme.typography.bodyLarge
         )
 
         Spacer(modifier = Modifier.height(4.dp))
 
         Text(
-            text = trail!!.description,
+            text = safeTrail
+                .description,
             style = MaterialTheme.typography.bodyMedium
         )
     }
