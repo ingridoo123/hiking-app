@@ -1,18 +1,11 @@
 package com.example.aplikacje_mobline.data
 
-import android.content.Context
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import com.example.aplikacje_mobline.data.remote.TrailApi
+import javax.inject.Inject
 
-class TrailRepository(private val context: Context) {
+class TrailRepository @Inject constructor(private val api: TrailApi) {
 
-    private val trails: List<Trail> by lazy {
-        val json = context.assets.open("trails.json").bufferedReader().use { it.readText() }
-        val type = object : TypeToken<List<Trail>>() {}.type
-        Gson().fromJson(json, type)
-    }
+    suspend fun getAll(): List<Trail> = api.getTrailsDetails()
 
-    fun getAll(): List<Trail> = trails
-
-    fun getById(id: Int): Trail? = trails.find { it.id == id }
+    suspend fun getById(id: Int): Trail? = api.getTrailsDetails().find { it.id == id }
 }

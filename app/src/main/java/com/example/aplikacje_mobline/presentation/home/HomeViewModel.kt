@@ -2,16 +2,20 @@ package com.example.aplikacje_mobline.presentation.home
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.aplikacje_mobline.data.Trail
 import com.example.aplikacje_mobline.data.TrailRepository
 import com.example.aplikacje_mobline.data.TrailType
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class HomeViewModel(application: Application): AndroidViewModel(application)  {
-
-    private val repository = TrailRepository(application)
+@HiltViewModel
+class HomeViewModel @Inject constructor(private val repository: TrailRepository): ViewModel()  {
 
     private val _selectedType = MutableStateFlow(TrailType.HIKING)
     val selectedType: StateFlow<TrailType> = _selectedType.asStateFlow()
@@ -28,8 +32,12 @@ class HomeViewModel(application: Application): AndroidViewModel(application)  {
         loadTrails()
     }
 
+
     private fun loadTrails() {
-        _filteredTrails.value = repository.getAll().filter { it.type == _selectedType.value }
+        viewModelScope.launch {
+            val trails = repository.getAll().filter { it.type == _selectedType.value }
+            _filteredTrails.value = trails
+        }
     }
 
 }
