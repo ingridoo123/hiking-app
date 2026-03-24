@@ -1,7 +1,5 @@
 package com.example.aplikacje_mobline.presentation.home
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.aplikacje_mobline.data.Trail
@@ -23,6 +21,12 @@ class HomeViewModel @Inject constructor(private val repository: TrailRepository)
     private val _filteredTrails = MutableStateFlow<List<Trail>>(emptyList())
     val filteredTrails: StateFlow<List<Trail>> = _filteredTrails.asStateFlow()
 
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
+
+    private val _errorMessage = MutableStateFlow<String?>(null)
+    val errorMessage: StateFlow<String?> = _errorMessage.asStateFlow()
+
     init {
         loadTrails()
     }
@@ -35,9 +39,21 @@ class HomeViewModel @Inject constructor(private val repository: TrailRepository)
 
     private fun loadTrails() {
         viewModelScope.launch {
-            val trails = repository.getAll().filter { it.type == _selectedType.value }
-            _filteredTrails.value = trails
+            _isLoading.value = true
+            _errorMessage.value = null
+            try {
+                val trails = repository.getAll().filter { it.type == _selectedType.value }
+                _filteredTrails.value = trails
+            } catch (exception: Exception) {
+                _filteredTrails.value = emptyList()
+                _errorMessage.value = "Nie udalo sie pobrac szlakow. Sprobuj ponownie."
+            } finally {
+                _isLoading.value = false
+            }
         }
     }
 
+    fun retry() {
+        loadTrails()
+    }
 }
