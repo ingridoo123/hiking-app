@@ -2,5 +2,7 @@
     <string name="app_name">Aplikacje_mobline</string>
     <string name="home_one">Szlaki górskie</string>
     <string name="home_button_one">Szlaki piesze</string>
+    <string name ="home_button_error">Spróbuj ponownie</string>
+    <string name="no_trails_for_type">Brak szlakow dla wybranego typu.</string>
     <string name="home_button_two">Szlaki rowerowe</string>
 </resources>

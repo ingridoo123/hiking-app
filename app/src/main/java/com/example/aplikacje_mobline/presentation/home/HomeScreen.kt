@@ -38,10 +38,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -59,8 +65,8 @@ import com.example.aplikacje_mobline.navigation.Screen
 @Composable
 fun HomeScreen(
     navController: NavController,
-    viewModel: HomeViewModel = hiltViewModel(),
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: HomeViewModel = hiltViewModel()
 ) {
 
     val selectedType by viewModel.selectedType.collectAsState()
@@ -120,13 +126,13 @@ fun HomeScreen(
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                             OutlinedButton(onClick = viewModel::retry) {
-                                Text("Sprobuj ponownie")
+                                Text(stringResource(R.string.home_button_error))
                             }
                         }
                     }
                     filteredTrails.isEmpty() -> {
                         Text(
-                            text = "Brak szlakow dla wybranego typu.",
+                            text = stringResource(R.string.no_trails_for_type),
                             modifier = Modifier.align(Alignment.Center),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -242,8 +248,7 @@ private fun TrailTypeSegment(
         } else {
             MaterialTheme.colorScheme.onSurfaceVariant
         },
-        animationSpec = tween(durationMillis = 320),
-        label = "segment_text_color"
+        animationSpec = tween(durationMillis = 320)
     )
 
     Box(
@@ -297,8 +302,7 @@ fun TrailCard(
 
             Column(
                 modifier = Modifier
-                    .fillMaxHeight(),
-                verticalArrangement = Arrangement.Center
+                    .fillMaxHeight()
             ) {
                 Text(
                     text = trail.name,
@@ -306,26 +310,73 @@ fun TrailCard(
                     fontWeight = FontWeight.SemiBold
                 )
                 Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = "Trudność: ${trail.difficulty}",
-                    style = MaterialTheme.typography.bodyMedium
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = trail.distance,
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(999.dp))
-                        .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.14f))
-                        .padding(horizontal = 10.dp, vertical = 4.dp),
-                    color = MaterialTheme.colorScheme.primary
-                )
+
+                DifficultyBadges(trail.difficulty)
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                    Text(
+                        text = trail.distance,
+                        style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(999.dp))
+                            .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.14f))
+                            .padding(horizontal = 10.dp, vertical = 4.dp),
+                        color = MaterialTheme.colorScheme.primary
+                    )
+
             }
         }
     }
 }
 
 @Composable
-fun BottomNavigationBar() {
+private fun DifficultyBadges(
+    text: String,
+    modifier: Modifier = Modifier
+) {
+    var badgesCount by remember { mutableIntStateOf(1) }
+    val badgeColor = Color(0Xffa11f4e)
 
+    if(text == "Łatwa") {
+        badgesCount = 1
+    } else if(text == "Średnia") {
+        badgesCount = 2
+    } else if (text == "Trudna") {
+        badgesCount = 3
+    }
+
+    Row(
+        modifier = modifier
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+
+            Box(
+                modifier = Modifier
+                    .size(22.dp)
+                    .background(badgeColor, shape = RoundedCornerShape(8.dp))
+            )
+        Spacer(Modifier.width(4.dp))
+            Box(
+                modifier = Modifier
+                    .size(22.dp)
+                    .background(if (badgesCount >= 2) {
+                        badgeColor
+                    } else MaterialTheme.colorScheme.primary.copy(alpha = 0.14f),
+                        shape = RoundedCornerShape(8.dp))
+
+            )
+        Spacer(Modifier.width(4.dp))
+            Box(
+                modifier = Modifier
+                    .size(22.dp)
+                    .background(if (badgesCount == 3) {
+                        badgeColor
+                    } else MaterialTheme.colorScheme.primary.copy(alpha = 0.14f),
+                        shape = RoundedCornerShape(5.dp))
+            )
+
+    }
 }
+
