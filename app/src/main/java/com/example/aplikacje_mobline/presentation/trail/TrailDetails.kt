@@ -150,7 +150,6 @@ fun TrailDetailsScreen(
                                 .height(300.dp),
                             contentScale = ContentScale.Crop
                         )
-
                         TrailDetailsContentCard(
                             name = safeTrail.name,
                             difficulty = safeTrail.difficulty,
@@ -269,7 +268,7 @@ private fun TrailInfoSectionCard(
                 Icon(
                     imageVector = Icons.Filled.Info,
                     contentDescription = section.label,
-                    modifier = Modifier.size(16.dp),
+                    modifier = Modifier.size(20.dp),
                     tint = MaterialTheme.colorScheme.primary
                 )
                 Text(

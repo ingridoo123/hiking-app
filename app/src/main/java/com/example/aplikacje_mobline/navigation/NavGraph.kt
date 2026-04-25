@@ -1,11 +1,15 @@
 package com.example.aplikacje_mobline.navigation
 
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -16,7 +20,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import com.example.aplikacje_mobline.presentation.favorite.FavoritesScreen
 import com.example.aplikacje_mobline.presentation.home.HomeScreen
 import com.example.aplikacje_mobline.presentation.trail.TrailDetailsScreen
@@ -32,7 +35,10 @@ fun Navigation() {
     Scaffold(
         bottomBar = {
             if (shouldShowBottomBar) {
-                NavigationBar {
+                NavigationBar(
+                    modifier = Modifier.height(60.dp),
+                    windowInsets = WindowInsets(0, 0, 0, 0)
+                ) {
                     NavigationBarItem(
                         selected = currentRoute == Screen.Home.route,
                         onClick = {
@@ -44,9 +50,13 @@ fun Navigation() {
                         },
                         icon = {
                             // TODO: Replace with your custom icon path/painterResource.
-                            Icon(Icons.Filled.Home, contentDescription = "Ekran glowny")
+                            Icon(
+                                imageVector = Icons.Filled.Home,
+                                contentDescription = "Ekran glowny",
+                                modifier = Modifier.size(22.dp)
+                            )
                         },
-                        label = { Text("Glowna") }
+                        alwaysShowLabel = false
                     )
                     NavigationBarItem(
                         selected = currentRoute == Screen.Favorites.route,
@@ -59,9 +69,13 @@ fun Navigation() {
                         },
                         icon = {
                             // TODO: Replace with your custom icon path/painterResource.
-                            Icon(Icons.Filled.Favorite, contentDescription = "Ulubione trasy")
+                            Icon(
+                                imageVector = Icons.Filled.Favorite,
+                                contentDescription = "Ulubione trasy",
+                                modifier = Modifier.size(22.dp)
+                            )
                         },
-                        label = { Text("Ulubione") }
+                        alwaysShowLabel = false
                     )
                 }
             }
