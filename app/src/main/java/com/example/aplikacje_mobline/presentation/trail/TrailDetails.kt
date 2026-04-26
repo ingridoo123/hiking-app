@@ -1,6 +1,7 @@
 package com.example.aplikacje_mobline.presentation.trail
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,8 +20,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -33,12 +34,17 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 import com.example.aplikacje_mobline.data.TrailType
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -58,6 +64,7 @@ fun TrailDetailsScreen(
         viewModel.loadTrail(trailId)
     }
 
+    var horizontalDragOffset by remember { mutableFloatStateOf(0f) }
     val trail by viewModel.trail.collectAsStateWithLifecycle()
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
     val errorMessage by viewModel.errorMessage.collectAsStateWithLifecycle()
@@ -89,12 +96,33 @@ fun TrailDetailsScreen(
             )
         }
     ) { innerPadding ->
+        val swipeToBackModifier = Modifier.pointerInput(Unit) {
+            detectHorizontalDragGestures(
+                onHorizontalDrag = { change, dragAmount ->
+                    if (dragAmount > 0f) {
+                        horizontalDragOffset = (horizontalDragOffset + dragAmount).coerceAtLeast(0f)
+                    }
+                    change.consume()
+                },
+                onDragEnd = {
+                    if (horizontalDragOffset > 120f) {
+                        onBackClick()
+                    }
+                    horizontalDragOffset = 0f
+                },
+                onDragCancel = {
+                    horizontalDragOffset = 0f
+                }
+            )
+        }
+
         when {
             isLoading -> {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(innerPadding),
+                        .padding(innerPadding)
+                        .then(swipeToBackModifier),
                     contentAlignment = Alignment.Center
                 ) {
                     CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
@@ -105,6 +133,7 @@ fun TrailDetailsScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(innerPadding)
+                        .then(swipeToBackModifier)
                         .padding(24.dp),
                     contentAlignment = Alignment.Center
                 ) {
@@ -127,7 +156,8 @@ fun TrailDetailsScreen(
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(innerPadding),
+                        .padding(innerPadding)
+                        .then(swipeToBackModifier),
                     contentAlignment = Alignment.Center
                 ) {
                     Text("Nie znaleziono szlaku.")
@@ -139,6 +169,7 @@ fun TrailDetailsScreen(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(innerPadding)
+                            .then(swipeToBackModifier)
                             .verticalScroll(rememberScrollState()),
                         verticalArrangement = Arrangement.spacedBy(0.dp)
                     ) {
@@ -155,6 +186,7 @@ fun TrailDetailsScreen(
                             difficulty = safeTrail.difficulty,
                             distance = safeTrail.distance,
                             type = safeTrail.type,
+                            country = safeTrail.country?.takeIf { it.isNotBlank() } ?: "Polska",
                             description = safeTrail.description,
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -173,12 +205,14 @@ private fun TrailDetailsContentCard(
     difficulty: String,
     distance: String,
     type: TrailType,
+    country: String,
     description: String,
     modifier: Modifier = Modifier
 ) {
     val infoSections = listOf(
-        TrailInfoSectionData(label = "Dlugosc trasy:", value = distance),
-        TrailInfoSectionData(label = "Typ:", value = type.name.lowercase().replaceFirstChar { it.uppercase() })
+        TrailInfoSectionData(label = "Długość:", value = distance),
+        TrailInfoSectionData(label = "Typ:", value = type.name.lowercase().replaceFirstChar { it.uppercase() }),
+        TrailInfoSectionData(label = "Kraj:", value = country)
     )
 
     Surface(
@@ -212,7 +246,25 @@ private fun TrailDetailsContentCard(
             }
 
             TrailInfoSectionsGrid(sections = infoSections)
-            Spacer(modifier = Modifier.height(4.dp))
+            Spacer(modifier = Modifier.height(20.dp))
+
+            Button(
+                onClick = { },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(52.dp),
+                shape = RoundedCornerShape(999.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0Xffa11f4e),
+                    contentColor = Color.White
+                )
+            ) {
+                Text(
+                    text = "Pokaż trase na mapie",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold
+                )
+            }
         }
     }
 }
@@ -222,25 +274,21 @@ private fun TrailInfoSectionsGrid(
     sections: List<TrailInfoSectionData>,
     modifier: Modifier = Modifier
 ) {
-    Column(
+    val fixedSections = listOf(
+        sections.getOrNull(0) ?: TrailInfoSectionData("Długość:", "-"),
+        sections.getOrNull(1) ?: TrailInfoSectionData("Typ:", "-"),
+        sections.getOrNull(2) ?: TrailInfoSectionData("Kraj:", "-")
+    )
+
+    Row(
         modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        sections.chunked(2).forEach { rowSections ->
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                rowSections.forEach { section ->
-                    TrailInfoSectionCard(
-                        section = section,
-                        modifier = Modifier.weight(1f)
-                    )
-                }
-                if (rowSections.size == 1) {
-                    Spacer(modifier = Modifier.weight(1f))
-                }
-            }
+        fixedSections.forEach { section ->
+            TrailInfoSectionCard(
+                section = section,
+                modifier = Modifier.weight(1f)
+            )
         }
     }
 }
@@ -250,6 +298,13 @@ private fun TrailInfoSectionCard(
     section: TrailInfoSectionData,
     modifier: Modifier = Modifier
 ) {
+    val iconPath = when(section.label) {
+        "Długość:" -> R.drawable.material_icons_hiking
+        "Typ:" -> R.drawable.material_icons_travel_explore
+        "Kraj:" -> R.drawable.font_awesome_location_arrow
+        else -> R.drawable.material_icons_hiking
+    }
+
     Surface(
         modifier = modifier,
         shape = RoundedCornerShape(14.dp),
@@ -266,7 +321,7 @@ private fun TrailInfoSectionCard(
                 horizontalArrangement = Arrangement.spacedBy(6.dp)
             ) {
                 Icon(
-                    imageVector = Icons.Filled.Info,
+                    painter = painterResource(id = iconPath),
                     contentDescription = section.label,
                     modifier = Modifier.size(20.dp),
                     tint = MaterialTheme.colorScheme.primary

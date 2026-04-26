@@ -16,6 +16,7 @@ data class Trail(
     val distance: String,
     val description: String,
     val type: TrailType,
+    val country: String? = null,
     val imagePath: String? = null
 )
 

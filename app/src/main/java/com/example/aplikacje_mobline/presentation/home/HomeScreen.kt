@@ -1,5 +1,6 @@
 package com.example.aplikacje_mobline.presentation.home
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -158,6 +159,7 @@ fun HomeScreen(
 
 }
 
+@SuppressLint("UnusedBoxWithConstraintsScope")
 @Composable
 private fun TrailTypeSwitcher(
     selectedType: TrailType,
@@ -287,14 +289,14 @@ fun TrailCard(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(vertical = 12.dp, horizontal = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             AsyncImage(
                 model = trail.imagePath,
                 contentDescription = trail.name,
                 modifier = Modifier
-                    .size(100.dp)
+                    .size(90.dp)
                     .clip(RoundedCornerShape(8.dp)),
                 contentScale = ContentScale.Crop,
                 placeholder = painterResource(R.drawable.general_img_landscape)
@@ -314,20 +316,27 @@ fun TrailCard(
                 DifficultyBadges(trail.difficulty)
 
                 Spacer(modifier = Modifier.height(10.dp))
-
-                    Text(
-                        text = trail.distance,
-                        style = MaterialTheme.typography.bodySmall,
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(999.dp))
-                            .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.14f))
-                            .padding(horizontal = 10.dp, vertical = 4.dp),
-                        color = MaterialTheme.colorScheme.primary
-                    )
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    TrailMetaBadge(text = trail.distance)
+                    TrailMetaBadge(text = trail.country?.takeIf { it.isNotBlank() } ?: "Polska")
+                }
 
             }
         }
     }
+}
+
+@Composable
+private fun TrailMetaBadge(text: String) {
+    Text(
+        text = text,
+        style = MaterialTheme.typography.bodySmall,
+        modifier = Modifier
+            .clip(RoundedCornerShape(999.dp))
+            .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.14f))
+            .padding(horizontal = 10.dp, vertical = 4.dp),
+        color = MaterialTheme.colorScheme.primary
+    )
 }
 
 @Composable

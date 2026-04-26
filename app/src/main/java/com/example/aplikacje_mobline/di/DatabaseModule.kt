@@ -18,7 +18,9 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun provideHikingDatabase(@ApplicationContext context: Context): HikingDatabase =
-        Room.databaseBuilder(context, HikingDatabase::class.java, "trails").build()
+        Room.databaseBuilder(context, HikingDatabase::class.java, "trails")
+            .fallbackToDestructiveMigration()
+            .build()
 
     @Provides
     fun provideTrailDao(hikingDatabase: HikingDatabase): TrailDao = hikingDatabase.trailDao()
