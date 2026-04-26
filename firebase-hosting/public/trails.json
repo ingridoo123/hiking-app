@@ -4,8 +4,9 @@
     "name": "Morskie Oko",
     "difficulty": "Łatwa",
     "distance": "8.5 km",
-    "description": "Klasyczna trasa asfaltowa do jednego z najpiękniejszych jezior.",
+    "description": "Popularna trasa prowadząca szeroką drogą przez las do jednego z najbardziej znanych tatrzańskich jezior. Szlak jest technicznie prosty, dlatego dobrze sprawdza się dla początkujących i rodzin. Najlepiej ruszyć wcześnie rano, aby uniknąć tłumów i spokojnie nacieszyć się widokiem na strome ściany otaczające staw.",
     "type": "HIKING",
+    "country": "Polska",
     "imagePath": "https://www.visitzakopane.pl/blog/wp-content/uploads/2017/03/morskieoko.jpg"
   },
   {
@@ -13,8 +14,9 @@
     "name": "Giewont",
     "difficulty": "Średnia",
     "distance": "10 km",
-    "description": "Kultowy szczyt z krzyżem, wymagający kondycji.",
+    "description": "Klasyczny cel tatrzańskich wycieczek z podejściem, które wymaga kondycji i pewnego kroku na bardziej stromych odcinkach. Trasa nagradza szeroką panoramą Podhala i charakterystycznym krzyżem na szczycie. W sezonie letnim warto zaplanować wejście poza godzinami szczytu ruchu.",
     "type": "HIKING",
+    "country": "Polska",
     "imagePath": "https://i-tatry.pl/wp-content/uploads/2014/10/giewont-1.jpg"
   },
   {
@@ -22,8 +24,9 @@
     "name": "Rysy",
     "difficulty": "Trudna",
     "distance": "14 km",
-    "description": "Najwyższy szczyt Polski, tylko dla doświadczonych turystów.",
+    "description": "Wymagające wejście na najwyższy szczyt Polski, przeznaczone dla osób z doświadczeniem górskim i dobrą wydolnością. Na trasie pojawiają się eksponowane fragmenty oraz większe przewyższenia, dlatego konieczne jest odpowiednie przygotowanie. Przy dobrej pogodzie widoki ze szczytu należą do najlepszych w całych Tatrach.",
     "type": "HIKING",
+    "country": "Polska",
     "imagePath": "https://magazyngory.pl/wp-content/uploads/2024/03/cover_Wysoka-i-Rysy-z-Niznich-Rysow.jpg"
   },
   {
@@ -31,8 +34,9 @@
     "name": "Trasa Dolina Kościeliska",
     "difficulty": "Łatwa",
     "distance": "12 km",
-    "description": "Piękna trasa rowerowa przez dolinę.",
+    "description": "Łagodna trasa rowerowa prowadząca przez malownicze okolice doliny i podhalańskich polan. Odcinki są przyjemne technicznie, dzięki czemu można jechać rekreacyjnie i zatrzymywać się na punkty widokowe. To dobry wybór na spokojny dzień z rowerem bez dużych podjazdów.",
     "type": "BIKING",
+    "country": "Polska",
     "imagePath": "https://contents.mediadecathlon.com/s1251952/k$8da1f409bc521c23ee7c3921edc3a0f7/1920x0/1173pt660/2346xcr1320/dolina-koscieliska.png?format=auto"
   },
   {
@@ -40,8 +44,9 @@
     "name": "Szlak Górski na Rowerze",
     "difficulty": "Średnia",
     "distance": "15 km",
-    "description": "Wymagająca trasa rowerowa dla zaawansowanych.",
+    "description": "Średnio trudna pętla rowerowa z mieszanką szutru i asfaltu, przeznaczona dla osób, które lubią dynamiczną jazdę. Trasa zawiera kilka podjazdów i szybszych zjazdów, więc dobrze mieć podstawowe doświadczenie terenowe. Po drodze można znaleźć miejsca na krótki odpoczynek i uzupełnienie wody.",
     "type": "BIKING",
+    "country": "Polska",
     "imagePath": "https://globtroper.pl/wp-content/uploads/2020/06/zwiedzanie-polski-na-rowerach-szlak-rowerowy.jpeg"
   },
   {
@@ -49,8 +54,9 @@
     "name": "Białka Tatrzańska - Bukowina",
     "difficulty": "Łatwa",
     "distance": "20 km",
-    "description": "Długa, ale łatwa trasa rowerowa przez malownicze wioski podtatrzańskie.",
+    "description": "Dłuższa, ale komfortowa trasa rowerowa poprowadzona przez podtatrzańskie miejscowości z licznymi punktami widokowymi. Profil jest łagodny, dlatego nadaje się także dla osób jeżdżących rekreacyjnie. To dobry wariant na całodniową wycieczkę z przerwami na lokalną kuchnię.",
     "type": "BIKING",
+    "country": "Polska",
     "imagePath": "https://www.waszaturystyka.pl/wp-content/uploads/2016/08/3e4b3d256a2531e5e21a869496b34598.jpg"
   },
   {
@@ -58,8 +64,9 @@
     "name": "Kasprowy Wierch",
     "difficulty": "Trudna",
     "distance": "12 km",
-    "description": "Jeden z najbardziej znanych szczytów Tatr, z doskonałą panoramą na polskie i słowackie szczyty. Trasa wymaga dobrej kondycji i odpowiedniego wyposażenia.",
+    "description": "Jeden z najbardziej rozpoznawalnych celów w Tatrach, oferujący rozległe panoramy na stronę polską i słowacką. Podejście bywa wymagające kondycyjnie i przy gorszej pogodzie szybko zmienia charakter na bardziej techniczny. Warto sprawdzić warunki i zabrać warstwowe ubranie, bo na grani bywa znacznie chłodniej.",
     "type": "HIKING",
+    "country": "Polska",
     "imagePath": "https://www.zakopane.pl/assets/zakopane25/media/thumbnails/main_slider/assets/zakopane25/media/files/ee252021-b72a-49f3-803b-273b87d8fc34/20160722-ab-dsc07384-copy.jpg"
   },
   {
@@ -67,8 +74,9 @@
     "name": "Czerwone Wierchy",
     "difficulty": "Trudna",
     "distance": "18 km",
-    "description": "Długi grzbietowy szlak po kopulastych wierzchołkach ponad Doliną Małej Łąki. Niesamowite widoki w każdą stronę, ale trasa przeznaczona tylko dla sprawnych turystów.",
+    "description": "Długa trasa graniowa z pięknymi, otwartymi widokami i sporym przewyższeniem na całej pętli. Szlak jest atrakcyjny krajobrazowo, ale wymaga dobrej orientacji i zapasu sił na powrót. Jesienią czerwieniejące trawy nadają temu miejscu wyjątkowy charakter.",
     "type": "HIKING",
+    "country": "Polska",
     "imagePath": "https://www.zakopane.pl/assets/zakopane25/media/thumbnails/main_slider/assets/zakopane25/media/files/94de0c36-7ce4-48e1-a1f7-04382b47f309/00607.jpg"
   },
   {
@@ -76,8 +84,9 @@
     "name": "Gubałówka - Szlak Widokowy",
     "difficulty": "Łatwa",
     "distance": "5 km",
-    "description": "Łatwa, rodzinna trasa spacerowa po grzbiecie Gubałówki z widokiem na panoramę Tatr. Idealna dla dzieci i osób starszych.",
+    "description": "Krótka i bardzo przyjemna trasa spacerowa po grzbiecie, idealna na spokojne popołudnie z widokiem na Tatry. Odcinki są mało wymagające i nadają się dla rodzin z dziećmi. Po drodze można zatrzymać się na lokalne przekąski i punkty fotograficzne.",
     "type": "HIKING",
+    "country": "Polska",
     "imagePath": "https://galeria.bankier.pl/p/d/8/95e8560a37b823-948-567-5-2-995-596.jpg"
   },
   {
@@ -85,8 +94,49 @@
     "name": "Zakopane - Nowy Targ",
     "difficulty": "Łatwa",
     "distance": "25 km",
-    "description": "Spokojna trasa rowerowa wzdłuż Podhala, biegnąca przez Poronin i Szaflary. Płaski, asfaltowy teren — idealna na niedzielną przejażdżkę.",
+    "description": "Długa, ale mało techniczna trasa rowerowa prowadząca przez Podhale, dobra na trening wytrzymałościowy w równym tempie. Profil terenu jest przeważnie łagodny, dzięki czemu można utrzymać komfortową kadencję. To świetna opcja na weekendowy przejazd z częstymi postojami.",
     "type": "BIKING",
+    "country": "Polska",
     "imagePath": "https://cdn.blablacar.com/discover/bus/PL/zakopane-1.webp"
+  },
+  {
+    "id": 11,
+    "name": "Cinque Torri Loop",
+    "difficulty": "Średnia",
+    "distance": "9 km",
+    "description": "Alpejska pętla w Dolomitach prowadząca przez łąki i skalne formacje o bardzo charakterystycznych kształtach. Trasa jest średnio wymagająca i oferuje częste punkty widokowe, dlatego warto zaplanować dłuższe przerwy na zdjęcia. Najlepsze warunki panują od późnej wiosny do wczesnej jesieni.",
+    "type": "HIKING",
+    "country": "Włochy",
+    "imagePath": "https://thephotohikes.com/wp-content/uploads/2023/11/cinque-torri-655bb5eb45ac5.webp"
+  },
+  {
+    "id": 12,
+    "name": "Lago di Braies Ride",
+    "difficulty": "Średnia",
+    "distance": "22 km",
+    "description": "Widokowa trasa rowerowa wokół dolin i jezior północnych Włoch z kilkoma dłuższymi, ale równymi podjazdami. Odcinki asfaltowe przeplatają się z twardszym szutrem, więc najlepiej sprawdzi się rower gravelowy lub MTB. Trasa jest malownicza i daje dużo okazji do zatrzymania się nad wodą.",
+    "type": "BIKING",
+    "country": "Włochy",
+    "imagePath": "https://northabroad.com/wp-content/uploads/lago-di-braies-PITT7221.jpg"
+  },
+  {
+    "id": 13,
+    "name": "Lauterbrunnen Valley Trail",
+    "difficulty": "Łatwa",
+    "distance": "11 km",
+    "description": "Przyjemny szlak dolinny w Szwajcarii, biegnący w pobliżu wodospadów i tradycyjnych alpejskich wiosek. Trasa jest łagodna, dlatego nadaje się dla osób początkujących i na spokojny trekking bez presji czasu. W pogodny dzień widoczność na wysokie ściany doliny robi duże wrażenie.",
+    "type": "HIKING",
+    "country": "Szwajcaria",
+    "imagePath": "https://media.myswitzerland.com/image/fetch/c_lfill,g_auto,w_3200,h_1800/f_auto,q_80,fl_keep_iptc/https://www.myswitzerland.com/-/media/dam/resources/routes/v/a/valley%20of%20the%2072%20waterfalls%20lauterbrunnen-stechelberg/images%20all%20season/37241_32001800.jpeg"
+  },
+  {
+    "id": 14,
+    "name": "Picos Gravel Traverse",
+    "difficulty": "Trudna",
+    "distance": "34 km",
+    "description": "Wymagająca trasa rowerowa w hiszpańskich górach z dużą sumą podjazdów i zmienną nawierzchnią. Przeznaczona jest dla zaawansowanych, którzy dobrze czują się na długich odcinkach pod obciążeniem. Nagrodą są szerokie panoramy i bardzo zróżnicowany krajobraz całego regionu.",
+    "type": "BIKING",
+    "country": "Hiszpania",
+    "imagePath": "https://www.france-bike-trips.com/mf_websites/main/uploads/en/circuit/circuit_293/gravel-spain-andalusia-badlands-cabo-de-gata-3_1743173895.jpg"
   }
 ]
