@@ -66,6 +66,7 @@ import com.example.aplikacje_mobline.navigation.Screen
 @Composable
 fun HomeScreen(
     navController: NavController,
+    onOpenDrawer: () -> Unit = {},
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
@@ -83,6 +84,11 @@ fun HomeScreen(
                 .fillMaxSize()
                 .padding(bottom = paddingValues.calculateBottomPadding())
         ) {
+            com.example.aplikacje_mobline.navigation.DrawerHeader(
+                title = "Home",
+                onOpenDrawer = onOpenDrawer
+            )
+
             Text(
                 text = stringResource(R.string.home_one),
                 style = MaterialTheme.typography.headlineMedium,

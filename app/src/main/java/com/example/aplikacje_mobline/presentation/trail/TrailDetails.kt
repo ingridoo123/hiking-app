@@ -1,5 +1,7 @@
 package com.example.aplikacje_mobline.presentation.trail
 
+import android.content.Intent
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -7,7 +9,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -20,10 +21,12 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -43,14 +46,18 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.example.aplikacje_mobline.data.TrailType
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.example.aplikacje_mobline.R
+import com.example.aplikacje_mobline.stopwatch.StopwatchViewModel
+import com.example.aplikacje_mobline.stopwatch.StopwatchUiState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -58,21 +65,24 @@ fun TrailDetailsScreen(
     trailId: Int,
     onBackClick: () -> Unit,
     onFavoriteClick: () -> Unit,
-    viewModel: TrailDetailsViewModel = hiltViewModel()
+    viewModel: TrailDetailsViewModel = hiltViewModel(),
+    stopwatchViewModel: StopwatchViewModel = hiltViewModel()
 ) {
     LaunchedEffect(trailId) {
         viewModel.loadTrail(trailId)
     }
 
+    val context = LocalContext.current
     var horizontalDragOffset by remember { mutableFloatStateOf(0f) }
     val trail by viewModel.trail.collectAsStateWithLifecycle()
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
     val errorMessage by viewModel.errorMessage.collectAsStateWithLifecycle()
+    val stopwatchUiState by stopwatchViewModel.uiState.collectAsStateWithLifecycle()
+    val isStopwatchOwnedByCurrentTrail = stopwatchUiState.activeTrailId == null || stopwatchUiState.activeTrailId == trailId
 
     Scaffold(
         topBar = {
             TopAppBar(
-                windowInsets = WindowInsets(0, 0, 0, 0),
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(
@@ -94,6 +104,44 @@ fun TrailDetailsScreen(
                     }
                 }
             )
+        },
+        floatingActionButton = {
+            val safeTrail = trail
+            FloatingActionButton(
+                onClick = {
+                    if (safeTrail != null) {
+                        if (stopwatchUiState.activeTrailId != safeTrail.id) {
+                            val activeName = stopwatchUiState.activeTrailName ?: "inna trasa"
+                            Toast.makeText(
+                                context,
+                                "Stoper dziala na trasie: $activeName",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            return@FloatingActionButton
+                        }
+                        if (stopwatchUiState.isRunning) {
+                            Toast.makeText(context, "najpierw zatrzymaj stoper", Toast.LENGTH_SHORT).show()
+                            return@FloatingActionButton
+                        }
+                        if (stopwatchUiState.elapsedMs <= 0L) {
+                            Toast.makeText(context, "Brak czasu do udostepnienia", Toast.LENGTH_SHORT).show()
+                            return@FloatingActionButton
+                        }
+
+                        val shareBody = "Moj czas na trasie ${safeTrail.name}: ${stopwatchUiState.formattedElapsed}"
+                        val intent = Intent(Intent.ACTION_SEND).apply {
+                            type = "text/plain"
+                            putExtra(Intent.EXTRA_TEXT, shareBody)
+                        }
+                        context.startActivity(Intent.createChooser(intent, "Udostepnij"))
+                    }
+                }
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Share,
+                    contentDescription = "Udostepnij czas"
+                )
+            }
         }
     ) { innerPadding ->
         val swipeToBackModifier = Modifier.pointerInput(Unit) {
@@ -188,6 +236,11 @@ fun TrailDetailsScreen(
                             type = safeTrail.type,
                             country = safeTrail.country?.takeIf { it.isNotBlank() } ?: "Polska",
                             description = safeTrail.description,
+                            stopwatchUiState = stopwatchUiState,
+                            isStopwatchOwnedByCurrentTrail = isStopwatchOwnedByCurrentTrail,
+                            onStartStopwatch = { stopwatchViewModel.startForTrail(safeTrail.id, safeTrail.name) },
+                            onStopStopwatch = { stopwatchViewModel.stopForTrail(safeTrail.id) },
+                            onResetStopwatch = { stopwatchViewModel.resetForTrail(safeTrail.id) },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .offset(y = (-30).dp)
@@ -207,6 +260,11 @@ private fun TrailDetailsContentCard(
     type: TrailType,
     country: String,
     description: String,
+    stopwatchUiState: StopwatchUiState,
+    isStopwatchOwnedByCurrentTrail: Boolean,
+    onStartStopwatch: () -> Unit,
+    onStopStopwatch: () -> Unit,
+    onResetStopwatch: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val infoSections = listOf(
@@ -248,11 +306,52 @@ private fun TrailDetailsContentCard(
             TrailInfoSectionsGrid(sections = infoSections)
             Spacer(modifier = Modifier.height(20.dp))
 
+            StopwatchPanel(
+                uiState = stopwatchUiState,
+                isStopwatchOwnedByCurrentTrail = isStopwatchOwnedByCurrentTrail,
+                onStart = onStartStopwatch,
+                onStop = onStopStopwatch,
+                onReset = onResetStopwatch
+            )
+        }
+    }
+}
+
+@Composable
+private fun StopwatchPanel(
+    uiState: StopwatchUiState,
+    isStopwatchOwnedByCurrentTrail: Boolean,
+    onStart: () -> Unit,
+    onStop: () -> Unit,
+    onReset: () -> Unit
+) {
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        Text(
+            text = "Stoper",
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.SemiBold
+        )
+        if (!isStopwatchOwnedByCurrentTrail) {
+            Text(
+                text = "Stoper dziala na trasie: ${uiState.activeTrailName.orEmpty()}",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            return@Column
+        }
+        Text(
+            text = uiState.formattedElapsed,
+            style = MaterialTheme.typography.headlineSmall,
+            fontWeight = FontWeight.Bold
+        )
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             Button(
-                onClick = { },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(52.dp),
+                onClick = onStart,
+                enabled = !uiState.isRunning,
+                modifier = Modifier.weight(1.6f),
                 shape = RoundedCornerShape(999.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color(0Xffa11f4e),
@@ -260,9 +359,33 @@ private fun TrailDetailsContentCard(
                 )
             ) {
                 Text(
-                    text = "Pokaż trase na mapie",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold
+                    text = "Włącz stoper",
+                    maxLines = 1,
+                    softWrap = false,
+                    overflow = TextOverflow.Visible,
+                    style = MaterialTheme.typography.labelLarge
+                )
+            }
+            Button(
+                onClick = onStop,
+                enabled = uiState.isRunning,
+                modifier = Modifier.weight(1f),
+                shape = RoundedCornerShape(999.dp)
+            ) {
+                Text("Stop")
+            }
+            Button(
+                onClick = onReset,
+                enabled = uiState.elapsedMs > 0L,
+                modifier = Modifier.weight(1.5f),
+                shape = RoundedCornerShape(999.dp)
+            ) {
+                Text(
+                    text = "Przerwij",
+                    maxLines = 1,
+                    softWrap = false,
+                    overflow = TextOverflow.Visible,
+                    style = MaterialTheme.typography.labelLarge
                 )
             }
         }
