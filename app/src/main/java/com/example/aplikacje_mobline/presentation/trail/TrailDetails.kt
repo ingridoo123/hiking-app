@@ -20,6 +20,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Button
@@ -75,6 +76,7 @@ fun TrailDetailsScreen(
     val context = LocalContext.current
     var horizontalDragOffset by remember { mutableFloatStateOf(0f) }
     val trail by viewModel.trail.collectAsStateWithLifecycle()
+    val isFavorite by viewModel.isFavorite.collectAsStateWithLifecycle()
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
     val errorMessage by viewModel.errorMessage.collectAsStateWithLifecycle()
     val stopwatchUiState by stopwatchViewModel.uiState.collectAsStateWithLifecycle()
@@ -94,10 +96,16 @@ fun TrailDetailsScreen(
                 },
                 title = { Text("Powrot") },
                 actions = {
-                    IconButton(onClick = onFavoriteClick) {
-                        // TODO: Replace with your custom icon path/painterResource if needed.
+                    IconButton(onClick = {
+                        viewModel.toggleFavorite()
+                        onFavoriteClick()
+                    }) {
                         Icon(
-                            painter = painterResource(R.drawable.bootstrap_bookmark),
+                            imageVector = if (isFavorite) {
+                                Icons.Filled.Favorite
+                            } else {
+                                Icons.Filled.FavoriteBorder
+                            },
                             contentDescription = "Zapisz do ulubionych",
                             modifier = Modifier.size(28.dp)
                         )

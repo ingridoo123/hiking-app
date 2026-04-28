@@ -1,9 +1,17 @@
 package com.example.aplikacje_mobline.navigation
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
@@ -11,12 +19,20 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.IntOffset
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -27,7 +43,6 @@ import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalDrawerSheet
@@ -38,6 +53,7 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.ui.res.painterResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.aplikacje_mobline.R
 import com.example.aplikacje_mobline.presentation.info.AppInfoScreen
@@ -46,6 +62,7 @@ import com.example.aplikacje_mobline.presentation.home.HomeScreen
 import com.example.aplikacje_mobline.presentation.trail.TrailDetailsScreen
 import com.example.aplikacje_mobline.stopwatch.StopwatchViewModel
 import kotlinx.coroutines.launch
+import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -59,6 +76,12 @@ fun Navigation() {
     val stopwatchViewModel: StopwatchViewModel = hiltViewModel()
     val stopwatchUiState by stopwatchViewModel.uiState.collectAsStateWithLifecycle()
     var stopwatchMenuExpanded by remember { mutableStateOf(false) }
+    var stopwatchYOffsetPx by remember { mutableFloatStateOf(0f) }
+    val configuration = LocalConfiguration.current
+    val density = LocalDensity.current
+    val draggableLimitPx = with(density) {
+        (configuration.screenHeightDp.dp.toPx() / 2f) - 90.dp.toPx()
+    }
     val drawerRoutes = setOf(Screen.Home.route, Screen.Favorites.route, Screen.AppInfo.route)
     val shouldEnableDrawerGestures = currentRoute in drawerRoutes
     val isOnActiveTrailDetails = currentRoute == Screen.TrailDetails.route &&
@@ -125,6 +148,7 @@ fun Navigation() {
                 }
                 composable(route = Screen.Favorites.route) {
                     FavoritesScreen(
+                        navController = navController,
                         onOpenDrawer = {
                             scope.launch {
                                 drawerState.open()
@@ -158,22 +182,52 @@ fun Navigation() {
                 Box(
                     modifier = Modifier
                         .align(Alignment.CenterEnd)
+                        .offset { IntOffset(x = 0, y = stopwatchYOffsetPx.roundToInt()) }
                         .padding(end = 12.dp)
+                        .pointerInput(draggableLimitPx) {
+                            detectDragGestures { change, dragAmount ->
+                                change.consume()
+                                stopwatchYOffsetPx =
+                                    (stopwatchYOffsetPx + dragAmount.y).coerceIn(-draggableLimitPx, draggableLimitPx)
+                            }
+                        }
                 ) {
-                    FloatingActionButton(
-                        onClick = { stopwatchMenuExpanded = true }
-                    ) {
-                        androidx.compose.foundation.layout.Row(
-                            modifier = Modifier.padding(horizontal = 14.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Icon(
-                                painter = painterResource(R.drawable.lucide_timer),
-                                contentDescription = "Stoper"
+                    Box(
+                        modifier = Modifier
+                            .wrapContentSize()
+                            .widthIn(max = 190.dp)
+                            .clip(RoundedCornerShape(16.dp))
+                            .background(
+                                brush = Brush.linearGradient(
+                                    colors = listOf(
+                                        androidx.compose.material3.MaterialTheme.colorScheme.primary.copy(alpha = 0.92f),
+                                        androidx.compose.material3.MaterialTheme.colorScheme.primary.copy(alpha = 0.72f),
+                                        androidx.compose.material3.MaterialTheme.colorScheme.primary.copy(alpha = 0.92f)
+                                    )
+                                )
                             )
+                            .clickable { stopwatchMenuExpanded = true }
+                    ) {
+                        Column(modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp)) {
+                            androidx.compose.foundation.layout.Row(
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.lucide_timer),
+                                    contentDescription = "Stoper"
+                                )
+                                Text(
+                                    text = stopwatchUiState.formattedElapsed,
+                                    modifier = Modifier.padding(start = 8.dp),
+                                    color = androidx.compose.material3.MaterialTheme.colorScheme.onPrimary
+                                )
+                            }
                             Text(
-                                text = "Stoper: ${stopwatchUiState.activeTrailName.orEmpty()}",
-                                modifier = Modifier.padding(start = 8.dp)
+                                text = stopwatchUiState.activeTrailName.orEmpty(),
+                                modifier = Modifier.padding(top = 4.dp),
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                color = androidx.compose.material3.MaterialTheme.colorScheme.onPrimary
                             )
                         }
                     }
@@ -187,7 +241,8 @@ fun Navigation() {
                             onClick = {
                                 stopwatchViewModel.forceReset()
                                 stopwatchMenuExpanded = false
-                            }
+                            },
+                            modifier = Modifier.clip(RoundedCornerShape(12.dp))
                         )
                     }
                 }

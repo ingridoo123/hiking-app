@@ -7,7 +7,7 @@ import com.example.aplikacje_mobline.data.Trail
 
 @Database(
     entities = [Trail::class],
-    version = 2,
+    version = 4,
     exportSchema = false
 )
 @TypeConverters(TrailTypeConverter::class)

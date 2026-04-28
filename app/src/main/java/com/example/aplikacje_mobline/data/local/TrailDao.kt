@@ -25,5 +25,14 @@ interface TrailDao {
     @Query("DELETE FROM trails")
     suspend fun clearAll()
 
+    @Query("SELECT * FROM trails WHERE isFavourite = 1")
+    suspend fun getFavorites(): List<Trail>
+
+    @Query("UPDATE trails SET isFavourite=:isFavorite WHERE id=:id")
+    suspend fun setFavorite(id: Int, isFavorite: Boolean)
+
+    @Query("SELECT isFavourite FROM trails WHERE id=:id")
+    suspend fun isFavorite(id: Int): Boolean
+
 
 }

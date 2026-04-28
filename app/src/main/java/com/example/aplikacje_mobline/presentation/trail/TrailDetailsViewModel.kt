@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.aplikacje_mobline.data.Trail
 import com.example.aplikacje_mobline.data.TrailRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,6 +17,8 @@ class TrailDetailsViewModel @Inject constructor(private val repository: TrailRep
 
     private val _trail = MutableStateFlow<Trail?>(null)
     val trail: StateFlow<Trail?> = _trail.asStateFlow()
+    private val _isFavorite = MutableStateFlow<Boolean>(false)
+    val isFavorite = _isFavorite.asStateFlow()
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
@@ -32,6 +35,7 @@ class TrailDetailsViewModel @Inject constructor(private val repository: TrailRep
                 if (_trail.value == null) {
                     _errorMessage.value = "Nie znaleziono szlaku."
                 }
+                _isFavorite.value = _trail.value?.isFavourite == true
             } catch (exception: Exception) {
                 _trail.value = null
                 _errorMessage.value = "Nie udalo sie pobrac szczegolow szlaku."
@@ -43,6 +47,22 @@ class TrailDetailsViewModel @Inject constructor(private val repository: TrailRep
 
     fun retry(id: Int) {
         loadTrail(id)
+    }
+
+    fun toggleFavorite() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val trailId = trail.value?.id
+            try {
+                trailId?.let { repository.toggleFavorite(it) }
+                val updatedTrail = trailId?.let { repository.getById(it) }
+                _trail.value = updatedTrail
+                _isFavorite.value = updatedTrail?.isFavourite == true
+            } catch (e: Exception) {
+                _errorMessage.value = "Nie udalo sie zaktualizowac ulubionych."
+            }
+        }
+
+
     }
 
 }
