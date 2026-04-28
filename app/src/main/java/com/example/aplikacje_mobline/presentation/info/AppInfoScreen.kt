@@ -24,45 +24,48 @@ fun AppInfoScreen(
         color = MaterialTheme.colorScheme.surface
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            modifier = Modifier.fillMaxSize()
         ) {
             DrawerHeader(
                 title = "Informacje",
                 onOpenDrawer = onOpenDrawer,
                 modifier = Modifier.padding(top = 4.dp)
             )
-
-            Text(
-                text = "Informacje o aplikacji",
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold
-            )
-
-            Card(
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainerLow
-                )
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                Column(
-                    modifier = Modifier.padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                Text(
+                    text = "Informacje o aplikacji",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold
+                )
+
+                Card(
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+                    )
                 ) {
-                    Text(
-                        text = "Autor: Aleksander Staszewski",
-                        style = MaterialTheme.typography.bodyLarge
-                    )
-                    Text(
-                        text = "Wersja: 1.0.3",
-                        style = MaterialTheme.typography.bodyLarge
-                    )
-                    Text(
-                        text = "Aplikacja pomaga przegladac trasy piesze i rowerowe oraz zapisywac ulubione szlaki.",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+                    Column(
+                        modifier = Modifier.padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        Text(
+                            text = "Autor: Aleksander Staszewski",
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                        Text(
+                            text = "Wersja: 1.0.3",
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                        Text(
+                            text = "Aplikacja pomaga przegladac trasy piesze i rowerowe oraz zapisywac ulubione szlaki.",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
                 }
             }
         }
